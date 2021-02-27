@@ -1,0 +1,56 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mongo-deployment
+  labels:
+    app: nginx
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+      - name: nginx
+        image: mongo:latest
+        ports:
+        - containerPort: 27017
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: my-service
+spec:
+  selector:
+    app: nginx
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 27017
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nodec-deployment
+  labels:
+    app: nodec
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nodec
+  template:
+    metadata:
+      labels:
+        app: nodec
+    spec:
+      containers:
+      - name: nodec
+        image: ahmeddemir1/nodemongocode:latest
+        ports:
+        - containerPort: 8000
+
